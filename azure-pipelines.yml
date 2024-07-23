@@ -16,10 +16,10 @@ stages:
         - task: CmdLine@2
           inputs:
             script: |
-              cd ~/DevOps-Task-06/
+              cd /home/umar_linux/DevOps-Task-06
               npm install
               npm install -g @angular/cli
-              ng serve
+              ng serve 
               echo click http://127.0.0.1:4200/ to view app
         
   - stage: PushAngularApp
