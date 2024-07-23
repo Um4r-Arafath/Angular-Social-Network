@@ -7,10 +7,25 @@ trigger:
 - main
 
 stages:
-  - stage: BuildAndPushAngularApp
-    displayName: Build And Push Angular Application
+  - stage: 
+    jobs:
+      - job: BuildAngularApp
+        displayName: 'Build Angular Application'
+        pool: local-agent-task-06
+        steps:
+        - task: CmdLine@2
+          inputs:
+            script: |
+              cd ~/DevOps-Task-06/
+              npm install
+              npm install -g @angular/cli
+              ng serve
+              echo click http://127.0.0.1:4200/ to view app
+        
+  - stage: PushAngularApp
     jobs:
       - job: BuildAndPushAngularApp
+        displayName: 'Build And Push Angular Application'
         pool: local-agent-task-06
         steps:
         - task: Docker@2
@@ -19,4 +34,14 @@ stages:
             repository: 'umararafath/angular-social-network'
             command: 'buildAndPush'
             Dockerfile: 'Dockerfile'
+
+      - job: Verification
+        displayName: 'Verify and Clean Environment'
+        pool: local-agent-task-06
+        dependsOn: BuildAndPushAngularApp
+        steps:
+          - script: |
+              docker images
+              docker image prune -a -f
+
 
