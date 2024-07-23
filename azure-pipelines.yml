@@ -6,23 +6,8 @@
 trigger:
 - main
 
-stages:
-  - stage: 
-    jobs:
-      - job: BuildAngularApp
-        displayName: 'Build Angular Application'
-        pool: local-agent-task-06
-        steps:
-        - task: CmdLine@2
-          inputs:
-            script: |
-              cd /home/umar_linux/DevOps-Task-06
-              npm install
-              npm install -g @angular/cli
-              ng serve 
-              echo click http://127.0.0.1:4200/ to view app
-        
-  - stage: PushAngularApp
+stages: 
+  - stage: BuildAndPushAngularApp
     jobs:
       - job: BuildAndPushAngularApp
         displayName: 'Build And Push Angular Application'
