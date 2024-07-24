@@ -19,14 +19,17 @@ stages:
             repository: 'umararafath/angular-social-network'
             command: 'buildAndPush'
             Dockerfile: 'Dockerfile'
-
-      - job: Verification
-        displayName: 'Verify and Clean Environment'
+        
+      - job: PullAndRunApp
+        displayName: 'Pull and Run Containerized App'
         pool: local-agent-task-06
-        dependsOn: BuildAndPushAngularApp
         steps:
-          - script: |
-              docker images
+        - task: CmdLine@2
+          inputs:
+            script: |
+              docker rm -f my-angular-app
+              docker run -d -p 4200:80 --name my-angular-app umararafath/angular-social-network:$(Build.BuildId)
               docker image prune -a -f
+              docker ps
 
 
