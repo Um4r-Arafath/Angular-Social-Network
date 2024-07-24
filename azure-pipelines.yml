@@ -31,5 +31,6 @@ stages:
               docker run -d -p 4200:80 --name my-angular-app umararafath/angular-social-network:$(Build.BuildId)
               docker image prune -a -f
               docker ps
+              echo cilck http://localhost:4200 to view application
 
 
