@@ -23,6 +23,7 @@ stages:
       - job: PullAndRunApp
         displayName: 'Pull and Run Containerized App'
         pool: local-agent-task-06
+        dependsOn: BuildAndPushAngularApp
         steps:
         - task: CmdLine@2
           inputs:
