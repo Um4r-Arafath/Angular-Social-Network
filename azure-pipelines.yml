@@ -11,27 +11,38 @@ stages:
     jobs:
       - job: BuildAndPushAngularApp
         displayName: 'Build And Push Angular Application'
-        pool: local-agent-task-06
+        pool:
+          vmImage: ubuntu-latest
         steps:
-        - task: Docker@2
+        # - task: Docker@2
+        #   inputs:
+        #     containerRegistry: 'Docker Registry'
+        #     repository: 'umararafath/angular-social-network'
+        #     command: 'buildAndPush'
+        #     Dockerfile: 'Dockerfile'
+        - task: ECRPushImage@1
           inputs:
-            containerRegistry: 'Docker Registry'
-            repository: 'umararafath/angular-social-network'
-            command: 'buildAndPush'
-            Dockerfile: 'Dockerfile'
+            awsCredentials: 'AWS ECR'
+            regionName: 'ap-southeast-1'
+            imageSource: 'imageid'
+            sourceImageId: '$(imageName):$(Build:BuilldId)'
+            repositoryName: 'docs-test'
+            pushTag: '$(Build.BuildId)'
+            forceDockerNamingConventions: true
         
-      - job: PullAndRunApp
-        displayName: 'Pull and Run Containerized App'
-        pool: local-agent-task-06
-        dependsOn: BuildAndPushAngularApp
-        steps:
-        - task: CmdLine@2
-          inputs:
-            script: |
-              docker rm -f my-angular-app
-              docker run -d -p 4200:80 --name my-angular-app umararafath/angular-social-network:$(Build.BuildId)
-              docker image prune -a -f
-              docker ps
-              echo cilck http://localhost:4200 to view application
+        
+      # - job: PullAndRunApp
+      #   displayName: 'Pull and Run Containerized App'
+      #   pool: local-agent-task-06
+      #   dependsOn: BuildAndPushAngularApp
+      #   steps:
+      #   - task: CmdLine@2
+      #     inputs:
+      #       script: |
+      #         docker rm -f my-angular-app
+      #         docker run -d -p 4200:80 --name my-angular-app umararafath/angular-social-network:$(Build.BuildId)
+      #         docker image prune -a -f
+      #         docker ps
+      #         echo cilck http://localhost:4200 to view application
 
 
